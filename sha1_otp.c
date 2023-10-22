@@ -1,6 +1,6 @@
 /* experiment to check SHA1-OTP as per rfc4226 & rfc6238
  * helper functions
- * compile with -lcrypto if using openssl */
+ * link with -lcrypto if using openssl */
 #include <inttypes.h>
 #include <stdlib.h>
 #include <stdio.h>

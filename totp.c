@@ -40,6 +40,8 @@ int main(int argc, char *argv[])
 	b32_deca(&bink,b32k,strlen(b32k),&kl);
 
 	qw2otp(sotp,epc,6,"sha1",bink,kl);
+
+	free(bink);
 	printf("OTP (new): %s\n",sotp);
 	return 0;
 }
