@@ -66,7 +66,7 @@ int b32_dec(uint8_t *dst, char *s, size_t l, size_t *dl)
 	{
 		c=(unsigned char)*s++;
 		if(c&0x80) continue;	/* ignore chars with upper bit set (maybe raise an error?) */
-		v=b32dectable[c];			/* decode value */
+		v=b32dectable[c];		/* decode value */
 		if(v==0xff) continue;	/* ignore invalid chars (maybe only ignore separators?) */
 
 		/* if an entire "quanta" has been decoded and we're on padding, stop */
