@@ -8,7 +8,7 @@
 
 static char b32enctable[]="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=";
 
-static char b32dectable[]=
+static unsigned char b32dectable[]=
 {
 	0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,/* 00 */
 	0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,/* 08 */
@@ -60,7 +60,7 @@ int b32_dec(uint8_t *dst, char *s, size_t l, size_t *dl)
 	uint8_t c,v;
 	uint8_t db=0;	/* holder for partially decoded byte */
 	if(d==NULL || s==NULL)
-		FUNC_ABORT("src or dst is NULL");
+		FUNC_ABORT_NA("src or dst is NULL");
 
 	while(l--)
 	{
@@ -133,7 +133,7 @@ int b32_enc(char *d, uint8_t *s ,size_t l)
 	/*          0 1 2 3 4 5 6 7 */
 	int pla[8]={0,3,6,1,4,7,2,5};
 	if(d==NULL || s==NULL)
-		FUNC_ABORT("src or dst is NULL");
+		FUNC_ABORT_NA("src or dst is NULL");
 
 	while(1)
 	{
@@ -147,6 +147,7 @@ int b32_enc(char *d, uint8_t *s ,size_t l)
 			/* padding */
 			pl=pla[bpos];
 			while(pl--) b32_store(d++,32);
+			return 0;
 		}
 		/* normal work */
 		else
@@ -211,15 +212,15 @@ int b32_enca(char **dst,uint8_t *s,size_t l)
 	dlen=l/5;
 	if(l%5)dlen++;
 	/* sanity check; I know size_t is no longer 32bit but nevermind, don't want more than 4GB base32 */
-	if(dlen>UINT_MAX/8) FUNC_ABORT("Source buffer too large");
+	if(dlen>UINT_MAX/8) FUNC_ABORT_NA("Source buffer too large");
 	dlen=dlen*8+1;	/* add room for null terminator */
 
 	if(dst==NULL || s==NULL)	/* invalid arguments */
-		FUNC_ABORT("src or dst is NULL");
+		FUNC_ABORT_NA("src or dst is NULL");
 
 	char *buf=malloc(dlen);
 	if(!buf)
-		FUNC_ABORT("alloc failed");
+		FUNC_ABORT_NA("alloc failed");
 
 	b32_enc(buf,s,l);
 	buf[dlen-1]=0;
@@ -233,12 +234,12 @@ int b32_deca(uint8_t **dst,char *s,size_t l,size_t *dl)
 	size_t dlen=1+5*(l/8);		/* 1+ to add space for terminating NULL */
 	if((l&0xf)!=0) dlen+=5;		/* in case some padding is missing, play it safe */
 	if(dst==NULL || s==NULL)	/* invalid arguments */
-		FUNC_ABORT("src or dst is NULL");
+		FUNC_ABORT_NA("src or dst is NULL");
 	if(l==0)					/* nothing to do */
 		return 0;
 	uint8_t *buf=malloc(dlen);
 	if(!buf)
-		FUNC_ABORT("alloc failed");
+		FUNC_ABORT_NA("alloc failed");
 
 	b32_dec(buf,s,l,&al);
 	buf[al]=0;
